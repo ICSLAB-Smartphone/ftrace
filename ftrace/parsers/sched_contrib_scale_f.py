@@ -70,5 +70,5 @@ def sched_contrib_scale_f(payload):
         if match:
             match_group_dict = match.groupdict()
             return SchedContribScaleF(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

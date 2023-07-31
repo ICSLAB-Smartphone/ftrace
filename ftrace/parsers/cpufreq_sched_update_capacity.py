@@ -86,5 +86,5 @@ def cpufreq_sched_update_capacity(payload):
         if match:
             match_group_dict = match.groupdict()
             return CpufreqSchedUpdateCapacity(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

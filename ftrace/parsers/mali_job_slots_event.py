@@ -72,5 +72,5 @@ def mali_job_slots_event(payload):
         if match:
             match_group_dict = match.groupdict()
             return MaliJobSlotsEvent(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

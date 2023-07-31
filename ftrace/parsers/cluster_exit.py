@@ -75,5 +75,5 @@ def cluster_exit(payload):
         if match:
             match_group_dict = match.groupdict()
             return ClusterExit(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

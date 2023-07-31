@@ -62,5 +62,5 @@ def irq_handler_exit(payload):
         if match:
             match_group_dict = match.groupdict()
             return IRQHandlerExit(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

@@ -78,5 +78,5 @@ def ext4_da_write_begin(payload):
         if match:
             match_group_dict = match.groupdict()
             return Ext4DAWriteBegin(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

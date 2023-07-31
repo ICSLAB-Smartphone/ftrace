@@ -62,5 +62,5 @@ def cpu_frequency_switch_end(payload):
         if match:
             match_group_dict = match.groupdict()
             return CpuFrequencySwitchEnd(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

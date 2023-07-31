@@ -61,5 +61,5 @@ def sync_pt(payload):
         if match:
             match_group_dict = match.groupdict()
             return SyncPT(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

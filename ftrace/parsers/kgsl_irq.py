@@ -64,5 +64,5 @@ def kgsl_irq(payload):
         if match:
             match_group_dict = match.groupdict()
             return KgslIRQ(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

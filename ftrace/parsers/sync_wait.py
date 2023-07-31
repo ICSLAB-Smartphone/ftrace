@@ -65,5 +65,5 @@ def sync_wait(payload):
         if match:
             match_group_dict = match.groupdict()
             return SyncWait(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

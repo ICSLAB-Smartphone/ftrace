@@ -128,7 +128,7 @@ class Bus(FTraceComponent):
                 try:
                     interval = \
                         Interval(last_event.timestamp if last_event else self._trace.interval.start, bur_event.timestamp)
-                except ValueError, e:
+                except ValueError as e:
                     raise e
                 state = \
                     BusState.BUSY if (bur_event.data.active or \

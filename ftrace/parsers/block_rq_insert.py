@@ -92,5 +92,5 @@ def block_rq_insert(payload):
             del match_group_dict['flush']
             match_group_dict['rwbs'] = RWBS(io_type=io_type, commands=commands)
             return BlockRQInsert(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

@@ -68,5 +68,5 @@ def clock_disable(payload):
         if match:
             match_group_dict = match.groupdict()
             return ClockDisable(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

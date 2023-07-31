@@ -91,5 +91,5 @@ def sched_load_avg_task(payload):
         if match:
             match_group_dict = match.groupdict()
             return SchedLoadAvgTask(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

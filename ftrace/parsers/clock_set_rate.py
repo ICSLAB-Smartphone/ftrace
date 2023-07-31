@@ -69,5 +69,5 @@ def clock_set_rate(payload):
         if match:
             match_group_dict = match.groupdict()
             return ClockSetRate(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

@@ -63,5 +63,5 @@ def mali_pm_power_off(payload):
         if match:
             match_group_dict = match.groupdict()
             return MaliPMPowerOff(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

@@ -24,7 +24,6 @@ import types
 import math
 import functools
 from  .third_party.enum.enum import Enum, unique
-from itertools import ifilter
 from .utils.decorators import memoize
 
 def is_list_like(arg):
@@ -121,7 +120,7 @@ def filter_by_task(iterable, attr, value, how='first'):
         except:
             return False
 
-    filtered = ifilter(filter_func, iterable)
+    filtered = filter(filter_func, iterable)
     rv = None
     try:
         if how in ('any', 'all'):

@@ -58,7 +58,7 @@ if __name__ == '__main__':
             try:
                 df_therm.loc[i_start:i_end, clk] = freq_event.frequency
             except KeyError:
-                print "Error logging " + str(freq_event)
+                print("Error logging " + str(freq_event))
                 df_therm[start + Micro(freq_event.interval.start*1e6):start + Micro(freq_event.interval.end*1e6), clk] = freq_event.frequency
         for clk_event in trace.clock.clock_intervals(clock=clk, state=ftrace.clock.ClockState.DISABLED, interval=None):
             df_therm.loc[start + Micro(clk_event.interval.start*1e6): start + Micro(clk_event.interval.end*1e6), clk] = 0

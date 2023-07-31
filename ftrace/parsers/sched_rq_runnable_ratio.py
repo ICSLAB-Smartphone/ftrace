@@ -72,5 +72,5 @@ def sched_rq_runnable_ratio(payratio):
         if match:
             match_group_dict = match.groupdict()
             return SchedRQRunnableRatio(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

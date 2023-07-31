@@ -87,5 +87,5 @@ def sched_switch(payload):
             match_group_dict = match.groupdict()
             match_group_dict['prev_state'] = TaskStateMapping[match_group_dict['prev_state']]
             return SchedSwitch(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

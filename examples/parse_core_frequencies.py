@@ -1,4 +1,6 @@
+import sys
 import argparse
+sys.path.append("../")
 import ftrace
 from ftrace import Ftrace
 from pandas import DataFrame
@@ -18,6 +20,7 @@ parser.add_argument('-f', '--file', dest='file',
 args = parser.parse_args()
 
 trace = Ftrace(args.file)
+print(trace.interval)
 
 df_freq = DataFrame( index = ALL_CPUS, columns=FREQ_ALL_CORES)
 df_freq.fillna(0, inplace=True)
@@ -26,4 +29,4 @@ for cpu in ALL_CPUS:
         for freq in trace.cpu.frequency_intervals(cpu=cpu, interval=busy_interval.interval):
             df_freq.loc[cpu, freq.frequency] += freq.interval.duration
 
-print df_freq
+print(df_freq)

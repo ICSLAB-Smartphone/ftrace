@@ -77,5 +77,5 @@ def sched_wakeup(payload):
         if match:
             match_group_dict = match.groupdict()
             return SchedWakeup(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

@@ -72,5 +72,5 @@ def sched_task_runnable_ratio(payload):
         if match:
             match_group_dict = match.groupdict()
             return SchedTaskRunnableRatio(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

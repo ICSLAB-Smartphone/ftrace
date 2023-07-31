@@ -74,5 +74,5 @@ def ext4_sync_file_enter(payload):
         if match:
             match_group_dict = match.groupdict()
             return Ext4SyncFileEnter(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

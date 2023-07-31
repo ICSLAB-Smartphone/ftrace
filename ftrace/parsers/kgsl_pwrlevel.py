@@ -69,5 +69,5 @@ def kgsl_pwrlevel(payload):
         if match:
             match_group_dict = match.groupdict()
             return KgslPwrlevel(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

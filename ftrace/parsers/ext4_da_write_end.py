@@ -80,5 +80,5 @@ def ext4_da_write_end(payload):
         if match:
             match_group_dict = match.groupdict()
             return Ext4DAWriteEnd(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

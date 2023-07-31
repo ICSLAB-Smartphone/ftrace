@@ -87,5 +87,5 @@ def memory_bus_usage(payload):
         if match:
             match_group_dict = match.groupdict()
             return MemoryBusUsage(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

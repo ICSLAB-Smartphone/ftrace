@@ -75,5 +75,5 @@ def sched_hmp_migrate(payload):
             match_group_dict = match.groupdict()
             match_group_dict['force'] = HMPMigrateMapping[int(match_group_dict['force'])]
             return SchedHMPMigrate(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

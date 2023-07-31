@@ -70,5 +70,5 @@ def sched_load_avg_cpu(payload):
         if match:
             match_group_dict = match.groupdict()
             return SchedLoadAvgCpu(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

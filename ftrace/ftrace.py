@@ -161,7 +161,7 @@ class Ftrace(object):
         try:
             self.events = EventList(self._parse_lines())
             return True
-        except Exception, e:
+        except Exception as e:
             log.exception(e)
             return False
 
@@ -238,9 +238,9 @@ class Ftrace(object):
         rv = data
         try:
             rv = PARSERS[tracepoint](data)
-        except Exception, e:
+        except Exception as e:
             rv = PARSERS[tracepoint](data)
-        except ParserError, e:
+        except ParserError as e:
             log.exception(e)
             log.warn('Error parsing {tp} with {data}'.format(tp=tracepoint, data=data))
         finally:

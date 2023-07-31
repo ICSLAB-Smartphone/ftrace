@@ -81,5 +81,5 @@ def sched_migrate_task(payload):
         if match:
             match_group_dict = match.groupdict()
             return SchedMigrateTask(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

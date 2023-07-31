@@ -89,5 +89,5 @@ def block_rq_complete(payload):
             commands = set(DiskCommandMapping[c] for c in rwbs_command[1:])
             match_group_dict['rwbs'] = RWBS(io_type=io_type, commands=commands)
             return BlockRQComplete(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

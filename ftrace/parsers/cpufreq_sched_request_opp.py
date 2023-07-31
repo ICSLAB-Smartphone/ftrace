@@ -73,5 +73,5 @@ def cpufreq_sched_request_opp(payload):
         if match:
             match_group_dict = match.groupdict()
             return CpufreqSchedRequestOpp(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

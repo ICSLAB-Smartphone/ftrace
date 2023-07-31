@@ -64,5 +64,5 @@ def kgsl_pwr_set_state(payload):
         if match:
             match_group_dict = match.groupdict()
             return KgslPwrSetState(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

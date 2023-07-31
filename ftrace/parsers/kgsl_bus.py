@@ -64,5 +64,5 @@ def kgsl_bus(payload):
         if match:
             match_group_dict = match.groupdict()
             return KgslBus(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

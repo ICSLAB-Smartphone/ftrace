@@ -64,5 +64,5 @@ def tsens_threshold_clear(payload):
         if match:
             match_group_dict = match.groupdict()
             return TsensThresholdClear(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

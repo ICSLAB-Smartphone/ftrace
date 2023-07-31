@@ -75,5 +75,5 @@ def cluster_enter(payload):
         if match:
             match_group_dict = match.groupdict()
             return ClusterEnter(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

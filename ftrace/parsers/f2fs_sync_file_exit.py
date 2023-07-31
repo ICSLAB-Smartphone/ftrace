@@ -78,5 +78,5 @@ def f2fs_sync_file_exit(payload):
         if match:
             match_group_dict = match.groupdict()
             return F2FSSyncFileExit(**match_group_dict)
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

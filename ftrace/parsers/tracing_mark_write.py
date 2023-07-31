@@ -152,5 +152,5 @@ def tracing_mark_write(payload):
             raise ParserError('Skipping trace_event_clock_sync') 
         else:
             raise ParserError('Unknown tracing_mark_write format')
-    except Exception, e:
+    except Exception as e:
         raise ParserError(e.message)

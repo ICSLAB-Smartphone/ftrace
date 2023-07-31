@@ -241,7 +241,7 @@ class CPU(FTraceComponent):
             filter_func = (lambda ti: ti.task == task) if task else None
             return IntervalList(filter(filter_func,
                                        intervals.slice(interval=interval)))
-        except Exception, e:
+        except Exception as e:
             raise FtraceError(msg=e.message)
 
     @requires('sched_switch', 'sched_wakeup')
@@ -350,7 +350,7 @@ class CPU(FTraceComponent):
                     last_event = cpu_idle_a
 
                 # again, we need some closure.
-                if last_event and last_event.data.state != 4294967295L:
+                if last_event and last_event.data.state != 4294967295:
                     self._cpu_idle_intervals_by_cpu[cpu].append(IdleInterval(
                                                         cpu=cpu,
                                                         state=last_event.data.state,
