@@ -110,10 +110,10 @@ class Android(FTraceComponent):
                 intervals = self._tmw_intervals_by_name[name]
             else:
                 intervals = IntervalList(sorted_items(value for key, value in
-                    self._tmw_intervals_by_name.iteritems() if name in key))
+                    self._tmw_intervals_by_name.items() if name in key))
         else: # assume iterable (must match exact)
             intervals = IntervalList(sorted_items(value for key, value in
-                    self._tmw_intervals_by_name.iteritems() if key in name))
+                    self._tmw_intervals_by_name.items() if key in name))
         intervals = intervals.slice(interval=interval)
         if task:
             intervals = IntervalList(filter(lambda it: it.event.task == task, intervals))
@@ -536,7 +536,7 @@ class Android(FTraceComponent):
 
         except GeneratorExit:
             # close things off
-            for pid, event_list in counter_events_by_pid.iteritems():
+            for pid, event_list in counter_events_by_pid.items():
                 for event in event_list:
                     last_timestamp = event.timestamp
                     interval = Interval(last_timestamp, self._trace.duration)
@@ -577,8 +577,8 @@ class Android(FTraceComponent):
 
         except GeneratorExit:
             # close things off
-            for pid, by_name in counter_events_by_pid.iteritems():
-                for cookie, event_list in by_name.iteritems():
+            for pid, by_name in counter_events_by_pid.items():
+                for cookie, event_list in by_name.items():
                     for event in event_list:
                         last_timestamp = event.timestamp
                         interval = Interval(last_timestamp, self._trace.duration)
@@ -614,8 +614,8 @@ class Android(FTraceComponent):
 
         except GeneratorExit:
             # close things off
-            for pid, by_name in counter_events_by_pid.iteritems():
-                for counter_name, event_list in by_name.iteritems():
+            for pid, by_name in counter_events_by_pid.items():
+                for counter_name, event_list in by_name.items():
                     for event in event_list:
                         last_timestamp = event.timestamp
                         last_value = event.data.value

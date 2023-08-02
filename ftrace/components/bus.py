@@ -122,7 +122,7 @@ class Bus(FTraceComponent):
     def _bur_events_handler(self):
         """Handler function for bus update request events"""
         self._bur_intervals_by_dev = defaultdict(IntervalList)
-        for device, events in self._bur_events_by_dev.iteritems():
+        for device, events in self._bur_events_by_dev.items():
             last_event = None
             for bur_event in events:
                 try:

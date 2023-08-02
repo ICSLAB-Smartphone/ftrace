@@ -237,7 +237,7 @@ class GPU(FTraceComponent):
     def _pwrlevel_events_handler(self):
         """Handler function for GPU Pwr Level events"""
         self._pwrlevel_intervals_by_device = defaultdict(IntervalList)
-        for device, events in self._pwrlevel_events_by_device.iteritems():
+        for device, events in self._pwrlevel_events_by_device.items():
             for pwr_a, pwr_b in zip(events, events[1:]):
                 interval = Interval(pwr_a.timestamp, pwr_b.timestamp)
                 freq_interval = FreqInterval(device=device,
@@ -263,7 +263,7 @@ class GPU(FTraceComponent):
     def _pwrstate_events_handler(self):
         """Handler function for GPU Pwr State events"""
         self._pwrstate_intervals_by_device = defaultdict(IntervalList)
-        for device, events in self._pwrstate_events_by_device.iteritems():
+        for device, events in self._pwrstate_events_by_device.items():
             for pwr_a, pwr_b in zip(events, events[1:]):
                 interval = Interval(pwr_a.timestamp, pwr_b.timestamp)
                 state = BusyState.map(pwr_a.data.state) or BusyState.UNKNOWN
@@ -290,7 +290,7 @@ class GPU(FTraceComponent):
     def _buslevel_events_handler(self):
         """Handler function for GPU Bus Level events"""
         self._buslevel_intervals_by_device = defaultdict(IntervalList)
-        for device, events in self._buslevel_events_by_device.iteritems():
+        for device, events in self._buslevel_events_by_device.items():
             for bus_a, bus_b in zip(events, events[1:]):
                 interval = Interval(bus_a.timestamp, bus_b.timestamp)
                 bus_interval = BusLevelInterval(device=device,

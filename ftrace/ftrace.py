@@ -277,7 +277,7 @@ class Ftrace(object):
 
     def _initiate_apis(self):
         """Start initialized all registered apis after parsing events in file"""
-        for name, cls in self._APIS.iteritems():
+        for name, cls in self._APIS.items():
             setattr(self, name, cls(self))
 
 def register_api(name):

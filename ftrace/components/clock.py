@@ -106,7 +106,7 @@ class Clock(FTraceComponent):
     def _clk_events_handler(self):
         """Handler function for clock enable/disable events"""
         self._clk_intervals_by_clock = defaultdict(IntervalList)
-        for clock, events in self._clk_events_by_clock.iteritems():
+        for clock, events in self._clk_events_by_clock.items():
             last_timestamp = self._trace.interval.start
             for clk_event in events:
                 # Yes, keep inverted as we track when change occurs
@@ -137,7 +137,7 @@ class Clock(FTraceComponent):
     def _freq_events_handler(self):
         """Handler function for clock frequency events"""
         self._freq_intervals_by_clock = defaultdict(IntervalList)
-        for clock, events in self._freq_events_by_clock.iteritems():
+        for clock, events in self._freq_events_by_clock.items():
             last_rate, last_timestamp = -1.0, self._trace.interval.start
             for freq_event in events:
                 interval = Interval(last_timestamp, freq_event.timestamp)

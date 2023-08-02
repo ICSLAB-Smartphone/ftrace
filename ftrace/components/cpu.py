@@ -288,7 +288,7 @@ class CPU(FTraceComponent):
         """Handler function for CPU frequency events"""
         self._freq_intervals_by_cpu = defaultdict(IntervalList)
         if not 'cpu_frequency_switch_start' in self.freq_tracepoints:
-            for cpu, events in self._freq_events_by_cpu.iteritems():
+            for cpu, events in self._freq_events_by_cpu.items():
                 for freq_a, freq_b in zip(events, events[1:]):
                     interval = Interval(freq_a.timestamp, freq_b.timestamp)
                     freq_interval = FreqInterval(cpu=cpu,
@@ -308,7 +308,7 @@ class CPU(FTraceComponent):
                                                 )
         else:
             # we have cpu_frequency_switch_start
-            for cpu, events in self._freq_events_by_cpu.iteritems():
+            for cpu, events in self._freq_events_by_cpu.items():
                 last_timestamp = 0.0
                 for freq in events:
                     interval = Interval(last_timestamp, freq.timestamp)
@@ -335,7 +335,7 @@ class CPU(FTraceComponent):
         """Handler function for CPU Idle events"""
         self._cpu_idle_intervals_by_cpu = defaultdict(IntervalList)
         if 'cpu_idle' in self.idle_tracepoints:
-            for cpu, events in self._cpu_idle_events_by_cpu.iteritems():
+            for cpu, events in self._cpu_idle_events_by_cpu.items():
                 last_event = None
                 for cpu_idle_a in events:
                     state = cpu_idle_a.data.state
@@ -361,7 +361,7 @@ class CPU(FTraceComponent):
                                                     )
                                                 )
         else: # Use cpu_idle_enter/exit
-            for cpu, events in self._cpu_idle_events_by_cpu.iteritems():
+            for cpu, events in self._cpu_idle_events_by_cpu.items():
                 last_event = None
                 last_timestamp = 0.0
                 for cpu_idle_a in events:
@@ -589,7 +589,7 @@ class CPU(FTraceComponent):
             last_rq_depth[cpu] = num_runnable
 
         # closure
-        for cpu, task in next_task_by_cpu.iteritems():
+        for cpu, task in next_task_by_cpu.items():
             if task:
                 task_interval = TaskInterval(task=task, cpu=cpu, # what's cpu.
                                     interval=Interval(last_seen_timestamps[cpu][task], self._trace.duration),

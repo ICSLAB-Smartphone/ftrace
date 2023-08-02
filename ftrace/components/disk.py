@@ -173,7 +173,7 @@ class Disk(FTraceComponent):
         except GeneratorExit:
             # close things off
             def closure(dict_to_use, dest_dict):
-                for sector, event_list in dict_to_use.iteritems():
+                for sector, event_list in dict_to_use.items():
                     for event in event_list:
                         last_timestamp = event.timestamp
                         io_type=event.data.rwbs.io_type

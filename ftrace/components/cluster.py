@@ -148,7 +148,7 @@ class Cluster(FTraceComponent):
     def _cluster_idle_events_handler(self):
         """Handler function for Cluster Idle events"""
         self._cluster_idle_intervals_by_cluster = defaultdict(IntervalList)
-        for cluster, events in self._cluster_idle_events_by_cluster.iteritems():
+        for cluster, events in self._cluster_idle_events_by_cluster.items():
             last_event = None
             for cluster_idle in events:
                 tp = cluster_idle.tracepoint

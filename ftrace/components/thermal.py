@@ -71,7 +71,7 @@ class Thermal(FTraceComponent):
     def _thermal_events_handler(self):
         """Handler function for thermal events"""
         self._thermal_intervals_by_tsens = defaultdict(IntervalList)
-        for tsens, events in self._thermal_events_by_tsens.iteritems():
+        for tsens, events in self._thermal_events_by_tsens.items():
             last_temp, last_timestamp, last_threshold = -1.0, 0.0, False
             current_threshold = False
             for thermal_event in events:
