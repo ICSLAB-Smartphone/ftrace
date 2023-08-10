@@ -66,7 +66,7 @@ class FTraceComponent(with_metaclass(abc.ABCMeta)):
 #------------------------------------------------------------------------------
 # FTrace
 
-class Ftrace(object):
+class FtraceParser(object):
 
     _APIS = {}
     _TRACER_PATTERN = re.compile(r"""#\s+tracer:\s+(?P<tracer>.+)""")
@@ -283,7 +283,7 @@ class Ftrace(object):
 def register_api(name):
     """Decorator for registering api methods"""
     def wrapped(cls):
-        Ftrace._APIS[name] = cls
+        FtraceParser._APIS[name] = cls
         log.info("Registering {name} api to trace".format(name=name))
         return cls
     return wrapped

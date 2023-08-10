@@ -29,6 +29,6 @@ from . interval import Interval, IntervalList
 from . task import Task
 from . event import Event
 from . components import *
-from . ftrace import Ftrace
+from . ftrace import FtraceParser
 
-__all__ = ['Ftrace', 'Interval', 'Task', 'EventList', 'IntervalList']
+__all__ = ['FtraceParser', 'Interval', 'Task', 'EventList', 'IntervalList']
