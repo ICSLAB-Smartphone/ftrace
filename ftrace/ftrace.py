@@ -210,7 +210,7 @@ class FtraceParser(object):
         Generator that yields ftrace lines in file.
         """
         yield_trace = False
-        with open(self.filepath, 'rU') as f:
+        with open(self.filepath, 'rU', encoding='UTF-8') as f:
             num_lines = os.fstat(f.fileno()).st_size
             while True:
                 line = f.readline().strip()
