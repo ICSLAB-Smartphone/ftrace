@@ -20,6 +20,7 @@ from .register import PARSERS
 # CPU
 from .sched_switch import sched_switch
 from .sched_wakeup import sched_wakeup
+from .sched_waking import sched_waking
 from .sched_migrate_task import sched_migrate_task
 from .cpufreq_interactive_setspeed import cpufreq_interactive_setspeed
 from .cpufreq_interactive_target import cpufreq_interactive_target
