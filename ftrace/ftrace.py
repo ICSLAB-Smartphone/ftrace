@@ -31,10 +31,10 @@ except ImportError:
     logging.basicConfig()
     from logging import getLogger as Logger
 
-from .parsers import PARSERS
-from .task import Task
-from .event import Event, EventList
-from .common import (
+from ftrace.parsers import PARSERS
+from ftrace.task import Task
+from ftrace.event import Event, EventList
+from ftrace.common import (
     ConstantBase,
     is_list_like,
     ParserError,
@@ -134,6 +134,8 @@ class FtraceParser(object):
         if success:
             self.interval = self.events.interval
             self._initiate_apis()
+        else:
+            log.error("Parse failed")
 
     def __repr__(self):
         return "Trace(filepath={}, tracer={}, lost_entries={})".format(

@@ -24,7 +24,7 @@
 """
 from six import integer_types
 from collections import namedtuple, defaultdict
-from .common import ConstantBase
+from ftrace.common import ConstantBase
 
 TaskBase = namedtuple("Task",
     [

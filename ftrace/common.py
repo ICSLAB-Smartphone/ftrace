@@ -23,8 +23,8 @@ import sys
 import types
 import math
 import functools
-from  .third_party.enum.enum import Enum, unique
-from .utils.decorators import memoize
+from ftrace.third_party.enum.enum import Enum, unique
+from ftrace.utils.decorators import memoize
 
 def is_list_like(arg):
     """Returns True if object is list-like, False otherwise"""
