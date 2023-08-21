@@ -124,7 +124,7 @@ class IntervalList(list):
             return self
 
         start, end = interval.start, interval.end
-        idx_left = bisect_left(self._start_timestamps, start) - 1
+        idx_left = bisect(self._start_timestamps, start) - 1
         idx_right = bisect(self._start_timestamps, end)
         idx_left = idx_left - 1 if idx_left >= len(self) else idx_left #TODO
         idx_right = None if idx_right > len(self) else idx_right
@@ -135,7 +135,7 @@ class IntervalList(list):
 
         #print(idx)
         #print(ll)
-        
+
         if trimmed and len(ll):
             for item in ll:
                 trim = False
