@@ -230,17 +230,21 @@ class CPU(FTraceComponent):
         over the specified interval (if any).
         TODO: filter by task_state
         """
+        filter_func = (lambda ti: ti.task == task) if task else None
         try:
             if cpu is not None:
                 intervals = self._task_intervals_by_cpu[cpu]
+                return IntervalList(filter(filter_func, intervals.slice(interval=interval)))
             else:
-                intervals = IntervalList(
-                                sorted_items(
-                                    self._task_intervals_by_cpu.values()))
+                interval_list = []
+                for cpu in self._trace.seen_cpus:
+                    intervals = self._task_intervals_by_cpu[cpu]
+                    for inter in filter(filter_func, intervals.slice(interval=interval)):
+                        interval_list.append(inter)
+                    #intervals = IntervalList(sorted_items(self._task_intervals_by_cpu.values()))
 
-            filter_func = (lambda ti: ti.task == task) if task else None
-            return IntervalList(filter(filter_func,
-                                       intervals.slice(interval=interval)))
+                #print(interval_list)
+                return IntervalList(interval_list)
         except Exception as e:
             raise FtraceError(msg=e.message)
 
