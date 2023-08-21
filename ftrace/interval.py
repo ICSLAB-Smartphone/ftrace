@@ -21,7 +21,7 @@
 """ Interval:  Represents an interval of time defined by two timestamps.
     IntervalList: List with objects with interval, sorted/sliceable by interval.
 """
-from bisect import bisect, insort
+from bisect import bisect, insort, bisect_left
 from .common import memoize
 
 class Interval(object):
@@ -124,14 +124,17 @@ class IntervalList(list):
             return self
 
         start, end = interval.start, interval.end
-        idx_left = bisect(self._start_timestamps, start)
+        idx_left = bisect_left(self._start_timestamps, start) - 1
         idx_right = bisect(self._start_timestamps, end)
-        idx_left = idx_left - 1 if idx_left >= len(self) else idx_left
+        idx_left = idx_left - 1 if idx_left >= len(self) else idx_left #TODO
         idx_right = None if idx_right > len(self) else idx_right
         idx = slice(idx_left, idx_right) if idx_left != idx_right else slice(idx_left - 1, idx_left)
 
         ll = self[idx]
         rv = IntervalList()
+
+        #print(idx)
+        #print(ll)
         
         if trimmed and len(ll):
             for item in ll:
