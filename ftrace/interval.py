@@ -148,5 +148,8 @@ class IntervalList(list):
                     rv.append(item._replace(interval=Interval(item_start, item_end)))
                 else:
                     rv.append(item)
+        else:
+            for item in ll:
+                rv.append(item)
 
         return rv

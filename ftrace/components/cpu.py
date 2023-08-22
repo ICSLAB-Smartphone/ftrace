@@ -215,32 +215,46 @@ class CPU(FTraceComponent):
         over the specified interval (if any) when TaskState = RUNNING
         i.e. running or runnable
         """
+        task_state = TaskState.RUNNING
+        task_intervals = self.task_intervals(cpu=cpu, task=task, interval=interval, task_state=task_state)
+        if task is None: # any non-idle task
+            filter_func = lambda ti: ti.task.pid != 0
+        else:
+            filter_func = None
+        return IntervalList(filter(filter_func, task_intervals))
+        '''
         task_intervals = self.task_intervals(cpu=cpu, task=task, interval=interval)
         if task is None: # any non-idle task
             filter_func = lambda ti: ti.task.pid != 0 and ti.state is TaskState.RUNNING
         else:
             filter_func = lambda ti: ti.state is TaskState.RUNNING
+        '''
 
         return IntervalList(filter(filter_func, task_intervals))
 
     @requires('sched_switch', 'sched_wakeup')
     @memoize
-    def task_intervals(self, cpu=None, task=None, interval=None):
+    def task_intervals(self, cpu=None, task=None, interval=None, task_state=None):
         """Returns task intervals for specified task (if any) on cpu (if any)
         over the specified interval (if any).
         TODO: filter by task_state
         """
+        filter_state_func = lambda ti: ti.state is task_state
         filter_func = (lambda ti: ti.task == task) if task else None
         try:
             if cpu is not None:
                 intervals = self._task_intervals_by_cpu[cpu]
-                return IntervalList(filter(filter_func, intervals.slice(interval=interval)))
+                stated_task_interval = IntervalList(filter(filter_state_func, intervals))
+                return IntervalList(filter(filter_func, stated_task_interval.slice(interval=interval)))
             else:
                 interval_list = []
                 for cpu in self._trace.seen_cpus:
                     intervals = self._task_intervals_by_cpu[cpu]
-                    for inter in filter(filter_func, intervals.slice(interval=interval)):
+                    stated_task_interval = IntervalList(filter(filter_state_func, intervals))
+                    for inter in filter(filter_func, stated_task_interval.slice(interval=interval, trimmed=False)):
                         interval_list.append(inter)
+                        print(inter)
+                        print("......")
                     #intervals = IntervalList(sorted_items(self._task_intervals_by_cpu.values()))
 
                 #print(interval_list)
