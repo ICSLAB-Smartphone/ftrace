@@ -3,6 +3,7 @@ from ftrace.common import ParserError
 from .register import register_parser
 from .binder import parse_binder_cmd
 from collections import namedtuple
+from enum import Enum
 
 TRACEPOINT = 'binder_transaction'
 
@@ -22,26 +23,32 @@ BinderTransactionBase = namedtuple(TRACEPOINT,
     ]
 )
 
+class BinderFlags(Enum):
+    TF_UNKOWN = 0
+    TF_ONE_WAY = 1
+    TF_ROOT_OBJECT = 4
+    TF_STATUS_CODE = 8
+    TF_ACCEPT_FDS = 16
+
 def decode_transaction_flags (flags):
 
     result = set()
 
     # this is a one-way call: async, no return
-    if flags & 0x01: result.add ('TF_ONE_WAY')
+    if flags & 0x01: result.add (BinderFlags.TF_ONE_WAY)
 
     # contents are the component's root object
-    if flags & 0x04: result.add ('TF_ROOT_OBJECT')
+    if flags & 0x04: result.add (BinderFlags.TF_ROOT_OBJECT)
 
     # contents are a 32-bit status code
-    if flags & 0x08: result.add ('TF_STATUS_CODE')
+    if flags & 0x08: result.add (BinderFlags.TF_STATUS_CODE)
 
     # allow replies with file descriptors
-    if flags & 0x10: result.add ('TF_ACCEPT_FDS')
+    if flags & 0x10: result.add (BinderFlags.TF_ACCEPT_FDS)
 
     # Check for missing flags
     remain = flags & 0xffffffe2
-    if remain: result.add ('UNKNOWN_FLAGS_%x' % remain)
-
+    if remain: result.add (BinderFlags.TF_UNKOWN)
     return result
 
 
