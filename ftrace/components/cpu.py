@@ -253,8 +253,6 @@ class CPU(FTraceComponent):
                     stated_task_interval = IntervalList(filter(filter_state_func, intervals))
                     for inter in filter(filter_func, stated_task_interval.slice(interval=interval, trimmed=False)):
                         interval_list.append(inter)
-                        print(inter)
-                        print("......")
                     #intervals = IntervalList(sorted_items(self._task_intervals_by_cpu.values()))
 
                 #print(interval_list)
