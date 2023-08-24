@@ -98,8 +98,8 @@ class Task(TaskBase):
         )
 
     def __repr__(self):
-        return "Task(name={}, pid={}, prio={})".format(
-        self.name, self.pid, self.prio,
+        return "Task(name={}, pid={}, prio={}, tgid={})".format(
+        self.name, self.pid, self.prio, self.tgid
         )
 
     def __eq__(self, other):
