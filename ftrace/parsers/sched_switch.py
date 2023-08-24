@@ -20,7 +20,6 @@
 
 import re
 import sys
-sys.path.append("/home/hacksang/Documents/FPSDoctor/libs/ftrace")
 from ftrace.common import ParserError
 from .register import register_parser
 from collections import namedtuple
