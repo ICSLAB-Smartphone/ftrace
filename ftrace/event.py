@@ -68,7 +68,7 @@ class Event(Eventbase):
             )
 
     def __repr__(self):
-        return "Event(task={}, cpu={}, timestamp={:.4}, data={}".format(
+        return "Event(task={}, cpu={}, timestamp={:.7}, data={}".format(
         self.task, self.cpu, self.timestamp, self.data,
         )
 
