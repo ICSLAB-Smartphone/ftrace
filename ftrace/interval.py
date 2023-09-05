@@ -111,6 +111,7 @@ class IntervalList(list):
 
     def slice(self, interval, trimmed=True):
         """
+        Caution: the slice must not overlap
         Returns list of objects whose interval fall
         between the specified interval.
 
@@ -124,17 +125,45 @@ class IntervalList(list):
             return self
 
         start, end = interval.start, interval.end
+        '''
+        don't use -1 because
+        interval        [  A   ]       [  B   ]
+                                    [         C      ] 
+        will get wrong index
+        
         idx_left = bisect(self._start_timestamps, start) - 1
+        if idx_left == -1:
+            idx_left = 0
+        '''
+
+        idx_left = bisect_left(self._start_timestamps, start)
+        if start >= 0.0207 and start <= 0.020717:
+            print("original idx_left : {}".format(idx_left))
+            print("start left: {} ".format(self._start_timestamps[idx_left]))
+            print("start left - 1: {} ".format(self._start_timestamps[idx_left - 1]))
+            print("end left: {} ".format(self._end_timestamps[idx_left]))
+            print("end left - 1: {} ".format(self._end_timestamps[idx_left - 1]))
+            print("len : {}".format(len(self._start_timestamps)))
+        if idx_left != 0 and idx_left != len(self._start_timestamps):
+            if self._end_timestamps[idx_left - 1] > start:
+                idx_left = idx_left - 1
+
         idx_right = bisect(self._start_timestamps, end)
-        idx_left = idx_left - 1 if idx_left >= len(self) else idx_left #TODO
-        idx_right = None if idx_right > len(self) else idx_right
-        idx = slice(idx_left, idx_right) if idx_left != idx_right else slice(idx_left - 1, idx_left)
+
+        if start >= 0.0207 and start <= 0.020717:
+            print("after idx_left : {}".format(idx_left))
+            print("after idx_right : {}".format(idx_right))
+
+#       idx_right = None if idx_right > len(self) else idx_right
+        #idx = slice(idx_left, idx_right) if idx_left != idx_right else slice(idx_left - 1, idx_left)
+        idx = slice(idx_left, idx_right)
 
         ll = self[idx]
         rv = IntervalList()
 
-        #print(idx)
-        #print(ll)
+        if start >= 0.0207 and start <= 0.020717:
+            print(idx)
+            print(ll)
 
         if trimmed and len(ll):
             for item in ll:

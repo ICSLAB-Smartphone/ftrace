@@ -23,6 +23,7 @@
     Task: Runnable thread (process) executed on CPU.
 """
 from six import integer_types
+from six import string_types
 from collections import namedtuple, defaultdict
 from ftrace.common import ConstantBase
 
@@ -111,6 +112,10 @@ class Task(TaskBase):
             return True if other.pid == self.pid else False
         elif isinstance(other, integer_types):
             return True if other == self.pid else False
+        ''' not recommended due to the name may be the same for diff threads
+        elif isinstance(other, string_types):
+            return True if other == self.name else False
+        '''
 
         raise ValueError('{type} not supported'.format(type(other)))
 

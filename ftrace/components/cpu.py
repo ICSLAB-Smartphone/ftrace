@@ -239,22 +239,31 @@ class CPU(FTraceComponent):
         over the specified interval (if any).
         TODO: filter by task_state
         """
-        filter_state_func = lambda ti: ti.state is task_state
+        filter_state_func = (lambda ti: ti.state == task_state) if task_state else None
         filter_func = (lambda ti: ti.task == task) if task else None
+        traced_cpu = -1
         try:
             if cpu is not None:
                 intervals = self._task_intervals_by_cpu[cpu]
                 stated_task_interval = IntervalList(filter(filter_state_func, intervals))
-                return IntervalList(filter(filter_func, stated_task_interval.slice(interval=interval)))
+                target_task_interval = IntervalList(filter(filter_func, stated_task_interval))
+                return IntervalList(target_task_interval.slice(interval=interval, trimmed=True))
             else:
                 interval_list = []
                 for cpu in self._trace.seen_cpus:
                     intervals = self._task_intervals_by_cpu[cpu]
                     stated_task_interval = IntervalList(filter(filter_state_func, intervals))
-                    for inter in filter(filter_func, stated_task_interval.slice(interval=interval, trimmed=False)):
+                    target_task_interval = IntervalList(filter(filter_func, stated_task_interval))
+                    if cpu == traced_cpu:
+                        print("***************************")
+                        print(target_task_interval)
+                        print("***************************")
+                    for inter in target_task_interval.slice(interval=interval, trimmed=True):
                         interval_list.append(inter)
                     #intervals = IntervalList(sorted_items(self._task_intervals_by_cpu.values()))
 
+                #print(self._task_intervals_by_cpu[6])
+                #print("***************************")
                 #print(interval_list)
                 return IntervalList(interval_list)
         except Exception as e:
@@ -492,10 +501,14 @@ class CPU(FTraceComponent):
         last_rq_depth = defaultdict(lambda: self._trace.interval.start)
         next_task_by_cpu = defaultdict(lambda: None)
 
+        traced_task_pid = -1 # control the log when traced_task_pid is valid
+
         for event in sched_events_gen():
             tracepoint, timestamp, data = event.tracepoint, event.timestamp, event.data
-            
+
             if tracepoint == 'sched_switch':
+                if data.prev_pid == traced_task_pid or data.next_pid == traced_task_pid:
+                    print(tracepoint)
                 cpu = event.cpu
                 prev_task = Task(name=data.prev_comm, pid=data.prev_pid, prio=data.prev_prio)
                 # Getting descheduled (fix: note correct state in task_intervals)
@@ -507,11 +520,42 @@ class CPU(FTraceComponent):
                 next_task = Task(name=data.next_comm, pid=data.next_pid, 
                                  prio=data.next_prio)
                 next_task_by_cpu[cpu] = next_task
-                
-                next_task_interval = TaskInterval(task=next_task, cpu=cpu, 
-                    interval=Interval(last_seen_timestamps[cpu][next_task], timestamp), 
-                    state=last_seen_state[cpu][next_task])
 
+
+                ''' find the max timestamp over all cpu
+                due to 
+                cpuA        task1   (switch out)
+                cpuB                                    task1 (switch in) 
+                there maybe not wakeup Event between the two switch Event
+                '''
+                next_task_interval_start = 0.0
+                next_task_cpu_start = 0
+                for _cpu in last_seen_timestamps.keys():
+                       if last_seen_timestamps[_cpu][next_task] >= next_task_interval_start:
+                           next_task_cpu_start = _cpu
+                           next_task_interval_start = last_seen_timestamps[_cpu][next_task]
+                       if data.prev_pid == traced_task_pid or data.next_pid == traced_task_pid:
+                           print("_cpu : {}".format(_cpu))
+                           print("interval_start : {}".format(last_seen_timestamps[_cpu][next_task]))
+
+                if data.prev_pid == traced_task_pid or data.next_pid == traced_task_pid:
+                    print("next_task_cpu_start : {}".format(next_task_cpu_start))
+                    print("next_task_interval_start : {}".format(last_seen_timestamps[next_task_cpu_start][next_task]))
+                    print("next_task_state : {}".format(last_seen_state[next_task_cpu_start][next_task]))
+
+                next_task_interval = TaskInterval(task=next_task, cpu=cpu,
+                    interval=Interval(next_task_interval_start, timestamp),
+                    state=last_seen_state[next_task_cpu_start][next_task])
+                '''
+                next_task_interval = TaskInterval(task=next_task, cpu=cpu,
+                    interval=Interval(last_seen_timestamps[cpu][next_task], timestamp),
+                    state=last_seen_state[cpu][next_task])
+                '''
+
+                if data.prev_pid == traced_task_pid or data.next_pid == traced_task_pid:
+                    print("add task_interval")
+                    print(prev_task_interval)
+                    print(next_task_interval)
                 self._task_intervals_by_cpu[cpu].append(prev_task_interval)
                 self._task_intervals_by_cpu[cpu].append(next_task_interval)
                 
@@ -556,6 +600,8 @@ class CPU(FTraceComponent):
                 self._tasks_by_cpu[cpu].add(prev_task)
 
             elif tracepoint == 'sched_wakeup':
+                if data.pid == traced_task_pid:
+                    print(tracepoint)
                 target_cpu = data.target_cpu
                 cpu = event.cpu
                 # When a task wakeup occurs, its placed on run-queue (RQ)
@@ -568,21 +614,49 @@ class CPU(FTraceComponent):
                 # first we note last seen state on cpu it was last seen
                 # since this tracepoint can occur in context of any cpu, 
                 # we simply have to do a search to find where this was running
+                ''' find the max timestamp over all cpu
+                due to 
+                cpuA        task1   (wake up)
+                cpuB                                    task1 (wake up) 
+                there maybe not wakeup Event between the two switch Event
+                '''
+                task_interval_start = 0.0
                 last_seen_cpu = None
                 for _cpu in last_seen_timestamps.keys():
-                    if last_seen_timestamps[_cpu][task] != 0.0:
+                    if last_seen_timestamps[_cpu][task] >= task_interval_start:
                         last_seen_cpu = _cpu
-                        break
+                        task_interval_start = last_seen_timestamps[_cpu][task]
+                    if data.pid == traced_task_pid:
+                        print("_cpu : {}".format(_cpu))
+                        print("interval_start : {}".format(last_seen_timestamps[_cpu][next_task]))
+
+                if data.pid == traced_task_pid:
+                    print("last seen cpu: {}".format(last_seen_cpu))
+
                 if last_seen_cpu is not None:
                     prev_task_state = last_seen_state[last_seen_cpu][task]
                     prev_task_interval = TaskInterval(task=task, cpu=last_seen_cpu,
                         interval=Interval(last_seen_timestamps[last_seen_cpu][task], timestamp),
                         state=prev_task_state)
+
+                    if data.pid == traced_task_pid:
+                        print("prev_task_state: {}".format(prev_task_state))
+                        print(prev_task_interval)
                     self._task_intervals_by_cpu[last_seen_cpu].append(prev_task_interval)
-                    last_seen_timestamps[last_seen_cpu][task] = timestamp
+                    ''' this will add same timestamp on last_seen_cpu and target_cpu
+                    time                                         T
+                    CPU0             A (Switchout)
+                    CPU1                                        A (wakeup)
+                                last_seen_timestamp[CPU0][A] =  T
+                    and       last_seen_timestamp[CPU1][A] =  T too
+                    so we comment it
+                    '''
+                    #last_seen_timestamps[last_seen_cpu][task] = timestamp
                 else:
                     pass #oh no, likely first time queued or traced
-                    
+
+                if data.pid == traced_task_pid:
+                    print("set TASK_WAKING for cpu {} and task {}".format(target_cpu, task))
                 last_seen_state[target_cpu][task] = TaskState.TASK_WAKING
                 try:
                     runnable_tasks[last_seen_cpu].remove(task)
@@ -591,6 +665,8 @@ class CPU(FTraceComponent):
                     pass
                 runnable_tasks[target_cpu].add(task)
                 if data.success: # most likely true
+                    if data.pid == traced_task_pid:
+                        print("set timestamp {} for cpu {} and task {}".format(timestamp, target_cpu ,task))
                     last_seen_timestamps[target_cpu][task] = timestamp
                     self._tasks_by_cpu[target_cpu].add(task)
 
