@@ -137,20 +137,26 @@ class IntervalList(list):
         '''
 
         idx_left = bisect_left(self._start_timestamps, start)
-        if start >= 0.0207 and start <= 0.020717:
+        log_left = 1.17727
+        log_right = 1.178
+        if start >= log_left and start <= log_right:
             print("original idx_left : {}".format(idx_left))
-            print("start left: {} ".format(self._start_timestamps[idx_left]))
+            print(self._start_timestamps)
+            if idx_left != len(self._start_timestamps):
+                print("start left: {} ".format(self._start_timestamps[idx_left]))
             print("start left - 1: {} ".format(self._start_timestamps[idx_left - 1]))
-            print("end left: {} ".format(self._end_timestamps[idx_left]))
+            if idx_left != len(self._start_timestamps):
+                print("end left: {} ".format(self._end_timestamps[idx_left]))
             print("end left - 1: {} ".format(self._end_timestamps[idx_left - 1]))
             print("len : {}".format(len(self._start_timestamps)))
-        if idx_left != 0 and idx_left != len(self._start_timestamps):
+        #if idx_left != 0 and idx_left != len(self._start_timestamps):
+        if idx_left != 0:
             if self._end_timestamps[idx_left - 1] > start:
                 idx_left = idx_left - 1
 
         idx_right = bisect(self._start_timestamps, end)
 
-        if start >= 0.0207 and start <= 0.020717:
+        if start >=  log_left and start <= log_right:
             print("after idx_left : {}".format(idx_left))
             print("after idx_right : {}".format(idx_right))
 
@@ -161,7 +167,7 @@ class IntervalList(list):
         ll = self[idx]
         rv = IntervalList()
 
-        if start >= 0.0207 and start <= 0.020717:
+        if start >= log_left and start <= log_right:
             print(idx)
             print(ll)
 
