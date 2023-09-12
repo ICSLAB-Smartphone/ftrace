@@ -222,15 +222,6 @@ class CPU(FTraceComponent):
         else:
             filter_func = None
         return IntervalList(filter(filter_func, task_intervals))
-        '''
-        task_intervals = self.task_intervals(cpu=cpu, task=task, interval=interval)
-        if task is None: # any non-idle task
-            filter_func = lambda ti: ti.task.pid != 0 and ti.state is TaskState.RUNNING
-        else:
-            filter_func = lambda ti: ti.state is TaskState.RUNNING
-        '''
-
-        return IntervalList(filter(filter_func, task_intervals))
 
     @requires('sched_switch', 'sched_wakeup')
     @memoize
@@ -255,10 +246,15 @@ class CPU(FTraceComponent):
                     stated_task_interval = IntervalList(filter(filter_state_func, intervals))
                     target_task_interval = IntervalList(filter(filter_func, stated_task_interval))
                     if cpu == traced_cpu:
-                        print("***************************")
+                        print("intervals")
+                        print(intervals)
+                        print("target_task_interval")
                         print(target_task_interval)
-                        print("***************************")
                     for inter in target_task_interval.slice(interval=interval, trimmed=True):
+                        if cpu == traced_cpu:
+                            print("***************************")
+                            print(inter)
+                            print("***************************")
                         interval_list.append(inter)
                     #intervals = IntervalList(sorted_items(self._task_intervals_by_cpu.values()))
 
@@ -542,6 +538,17 @@ class CPU(FTraceComponent):
                     print("next_task_cpu_start : {}".format(next_task_cpu_start))
                     print("next_task_interval_start : {}".format(last_seen_timestamps[next_task_cpu_start][next_task]))
                     print("next_task_state : {}".format(last_seen_state[next_task_cpu_start][next_task]))
+
+                # swapper/0 1 2 3 4 5 6 will be seen as same task due to same pid
+                # and hash(task) equals hash(task.pid)
+                #          A                    B                   C
+                #    swapper 0                              swapper 0
+                #                           swapper 1
+                # we should use A instead of B
+                # CAUTION: swapper only shown in switch, we should see swapper in wake event
+                if next_task.pid == 0:
+                    next_task_interval_start = last_seen_timestamps[cpu][next_task]
+                    next_task_cpu_start = cpu
 
                 next_task_interval = TaskInterval(task=next_task, cpu=cpu,
                     interval=Interval(next_task_interval_start, timestamp),
