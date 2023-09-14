@@ -117,7 +117,7 @@ class Task(TaskBase):
             return True if other == self.name else False
         '''
 
-        raise ValueError('{type} not supported'.format(type(other)))
+        raise ValueError('{} not supported'.format(type(other)))
 
     def __hash__(self):
         # IMPORTANT: Don't hash by name or priority

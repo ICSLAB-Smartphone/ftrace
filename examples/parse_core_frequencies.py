@@ -63,6 +63,15 @@ print(trace.cpu.frequency_intervals(cpu=4, interval=Interval(0.016, 0.020215)))
 print("-----------------------------")
 print(trace.cpu.frequency_intervals(cpu=4, interval=Interval(0.016, 0.016)))
 
+print("************************")
+print(trace.android.event_intervals(name="waiting for GPU completion",
+                                    task=17218,
+                                    #use data.pid instead of task.pid
+                                    #task=6980,
+                                    interval = Interval(0.016, 0.028),
+                                    match_exact=False))
+print("**************************")
+
 '''
 df_freq = DataFrame(index=ALL_CPUS, columns=FREQ_ALL_CORES)w
 df_freq.fillna(0, inplace=True)
