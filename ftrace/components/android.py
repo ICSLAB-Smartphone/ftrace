@@ -657,5 +657,5 @@ class Android(FTraceComponent):
             handler_func.send(event)
 
         # shut down the coroutines (..and we are done!)
-        for handler_func in self.__event_handlers.itervalues():
+        for handler_func in self.__event_handlers.values():
             handler_func.close()

@@ -30,7 +30,7 @@ from ftrace.composites import sorted_items
 from ftrace.common import ConstantBase, is_list_like
 from ftrace.utils.decorators import requires, memoize
 
-log = Logger('CPU')
+log = Logger('GPU')
 
 # Used to track interval when task is in/out of run-queue & its state.
 #TaskInterval = namedtuple('TaskInterval', ['task', 'device', 'interval', 'state'])
