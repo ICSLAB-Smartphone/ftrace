@@ -232,7 +232,7 @@ class CPU(FTraceComponent):
         """
         filter_state_func = (lambda ti: ti.state == task_state) if task_state else None
         filter_func = (lambda ti: ti.task == task) if task else None
-        traced_cpu = -1
+        traced_cpu = -1 #For Debug
         try:
             if cpu is not None:
                 intervals = self._task_intervals_by_cpu[cpu]

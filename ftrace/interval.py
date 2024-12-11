@@ -127,9 +127,10 @@ class IntervalList(list):
         start, end = interval.start, interval.end
         '''
         don't use -1 because
+                             0              1
         interval        [  A   ]       [  B   ]
                                     [         C      ] 
-        will get wrong index
+        will get wrong index 1 - 1 = 0, we want B
         
         idx_left = bisect(self._start_timestamps, start) - 1
         if idx_left == -1:
@@ -151,6 +152,18 @@ class IntervalList(list):
                 print("end left - 1: {} ".format(self._end_timestamps[idx_left - 1]))
             print("len : {}".format(len(self._start_timestamps)))
         #if idx_left != 0 and idx_left != len(self._start_timestamps):
+        '''
+                             0              1
+        interval        [  A   ]       [  B   ]
+                                [             C      ] 
+        we want (0, 2)
+
+                             0              1
+        interval        [  A   ]       [  B   ]
+                                             [] 
+                                           [ C ] 
+        we want (1, 2)
+        '''
         if idx_left != 0:
             if self._end_timestamps[idx_left - 1] > start:
                 idx_left = idx_left - 1
