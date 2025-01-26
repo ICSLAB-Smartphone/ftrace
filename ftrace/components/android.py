@@ -83,12 +83,19 @@ class Android(FTraceComponent):
     def __init__(self, trace):
         self._trace = trace
         self._events = trace.events
-
+        self._tgid_by_pid = {}
         self.__event_handlers = {}
         self._tmw_intervals_by_name = defaultdict(IntervalList)
 
     def _initialize(self):
         self._parse_tmw_events()
+
+    @requires('tracing_mark_write')
+    def get_tgid_by_pid(self, pid):
+        if pid not in self._tgid_by_pid:
+            return None
+        else:
+            return self._tgid_by_pid[pid]
 
     @property
     @requires('tracing_mark_write')
@@ -520,8 +527,11 @@ class Android(FTraceComponent):
                 event = (yield)
                 pid = event.task.pid
                 tag = event.data.atrace_tag
+
                 if tag is AtraceTag.CONTEXT_BEGIN:
                     counter_events_by_pid[pid].append(event)
+                    if pid not in self._tgid_by_pid:
+                        self._tgid_by_pid[pid] = event.data.pid
                 elif tag is AtraceTag.CONTEXT_END and counter_events_by_pid[pid]:
                     last_event = counter_events_by_pid[pid].pop()
                     last_timestamp = last_event.timestamp
@@ -602,6 +612,8 @@ class Android(FTraceComponent):
                 pid = event.data.pid
                 counter_name = event.data.counter_name
                 event_list = counter_events_by_pid[pid][counter_name]
+                if event.task.pid not in self._tgid_by_pid:
+                    self._tgid_by_pid[event.task.pid] = event.data.pid
                 if event_list:
                     last_event = event_list.pop()
                     last_timestamp = last_event.timestamp

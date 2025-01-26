@@ -506,7 +506,7 @@ class CPU(FTraceComponent):
                 if data.prev_pid == traced_task_pid or data.next_pid == traced_task_pid:
                     print(tracepoint)
                 cpu = event.cpu
-                prev_task = Task(name=data.prev_comm, pid=data.prev_pid, prio=data.prev_prio)
+                prev_task = Task(name=data.prev_comm, pid=data.prev_pid, prio=data.prev_prio, tgid=self._trace.seen_tasks[data.prev_pid])
                 # Getting descheduled (fix: note correct state in task_intervals)
                 prev_task_state = TaskState.RUNNING # last_seen_state[cpu][prev_task]
                 prev_task_interval = TaskInterval(task=prev_task, cpu=cpu,
@@ -514,7 +514,7 @@ class CPU(FTraceComponent):
                     state=prev_task_state)
 
                 next_task = Task(name=data.next_comm, pid=data.next_pid, 
-                                 prio=data.next_prio)
+                                 prio=data.next_prio, tgid=self._trace.seen_tasks[data.next_pid])
                 next_task_by_cpu[cpu] = next_task
 
 
@@ -614,7 +614,7 @@ class CPU(FTraceComponent):
                 # When a task wakeup occurs, its placed on run-queue (RQ)
                 # but may not be RUNNING right-away (depending on priority)
                 # during this time & if anything is runnable
-                task = Task(name=data.comm, pid=data.pid, prio=data.prio)
+                task = Task(name=data.comm, pid=data.pid, prio=data.prio, tgid=self._trace.seen_tasks[data.pid])
                 # woken-up task can run right-away if nothing is on queue.
                 # we handle this later.
                 

@@ -123,6 +123,7 @@ class FtraceParser(object):
         self.interval = None
         self.tracepoints = set()
         self.seen_cpus = set()
+        self.seen_tasks = {}
 
         # tracer metadata
         self.tracer = None
@@ -197,6 +198,7 @@ class FtraceParser(object):
                     event = event._replace(timestamp=event.data.timestamp)
                 # add to seen cpus
                 self.seen_cpus.add(event.cpu)
+                self.seen_tasks[event.task.pid] = event.task.tgid
                 if self._initial_tps is None or event.tracepoint in self._initial_tps:
                     self.tracepoints.add(event.tracepoint)
                     yield event
